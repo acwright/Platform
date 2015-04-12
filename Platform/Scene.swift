@@ -56,36 +56,40 @@ class Scene: SKScene {
     }
     
     override func keyDown(theEvent: NSEvent) {
-        switch Int(theEvent.charactersIgnoringModifiers!.utf16[0]) {
-        case NSLeftArrowFunctionKey:
-            self.player.left()
-        case NSRightArrowFunctionKey:
-            self.player.right()
-        case NSUpArrowFunctionKey:
-            self.player.jump(false)
-        default:
-            break
-        }
-        
-        if theEvent.keyCode == 49 {
-            self.player.jump(false)
+        if let utf16View = theEvent.charactersIgnoringModifiers?.utf16 {
+            switch Int(utf16View[utf16View.startIndex]) {
+            case NSLeftArrowFunctionKey:
+                self.player.left()
+            case NSRightArrowFunctionKey:
+                self.player.right()
+            case NSUpArrowFunctionKey:
+                self.player.jump(false)
+            default:
+                break
+            }
+            
+            if theEvent.keyCode == 49 {
+                self.player.jump(false)
+            }
         }
     }
     
     override func keyUp(theEvent: NSEvent) {
-        switch Int(theEvent.charactersIgnoringModifiers!.utf16[0]) {
-        case NSLeftArrowFunctionKey:
-            self.player.stop()
-        case NSRightArrowFunctionKey:
-            self.player.stop()
-        case NSUpArrowFunctionKey:
-            self.player.jump(true)
-        default:
-            break
-        }
-        
-        if theEvent.keyCode == 49 {
-            self.player.jump(true)
+        if let utf16View = theEvent.charactersIgnoringModifiers?.utf16 {
+            switch Int(utf16View[utf16View.startIndex]) {
+            case NSLeftArrowFunctionKey:
+                self.player.stop()
+            case NSRightArrowFunctionKey:
+                self.player.stop()
+            case NSUpArrowFunctionKey:
+                self.player.jump(true)
+            default:
+                break
+            }
+            
+            if theEvent.keyCode == 49 {
+                self.player.jump(true)
+            }
         }
     }
 }

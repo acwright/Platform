@@ -57,7 +57,7 @@ class Wall: SKNode {
         
         let playerRect = player.collisionBoundingBox()
         
-        for child in self.children as [SKSpriteNode] {
+        for child in self.children as! [SKSpriteNode] {
             let childRect = child.frame
             
             let collision = self.testRectangleCollision(A: childRect, B: playerRect)
@@ -73,8 +73,10 @@ class Wall: SKNode {
                     player.velocity = CGVectorMake(player.velocity.dx, 0.0)
                 case .Left:
                     player.desiredPosition = CGPointMake(player.desiredPosition.x + collision.rect.size.width, player.desiredPosition.y)
+                    player.velocity = CGVectorMake(0.0, player.velocity.dy)
                 case .Right:
                     player.desiredPosition = CGPointMake(player.desiredPosition.x - collision.rect.size.width, player.desiredPosition.y)
+                    player.velocity = CGVectorMake(0.0, player.velocity.dy)
                 default:
                     break
                 }

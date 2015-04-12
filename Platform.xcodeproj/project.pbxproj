@@ -14,7 +14,6 @@
 		45A5499A1AC9439F00244D00 /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A549951AC9439F00244D00 /* Int+Extensions.swift */; };
 		45A5499B1AC9439F00244D00 /* SKColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A549961AC9439F00244D00 /* SKColor+Extensions.swift */; };
 		45A549A61AC944B300244D00 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 45A5499D1AC944B300244D00 /* LICENSE.txt */; };
-		45A549A71AC944B300244D00 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 45A5499E1AC944B300244D00 /* README.md */; };
 		45A549A81AC944B300244D00 /* SKAction+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A5499F1AC944B300244D00 /* SKAction+Extensions.swift */; };
 		45A549A91AC944B300244D00 /* SKAction+SpecialEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A549A01AC944B300244D00 /* SKAction+SpecialEffects.swift */; };
 		45A549AA1AC944B300244D00 /* SKNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A549A11AC944B300244D00 /* SKNode+Extensions.swift */; };
@@ -272,7 +271,6 @@
 				45A549B01AC9463D00244D00 /* Wall.swift in Sources */,
 				45A549AC1AC944B300244D00 /* SKTEffects.swift in Sources */,
 				45A549991AC9439F00244D00 /* CGVector+Extensions.swift in Sources */,
-				45A549A71AC944B300244D00 /* README.md in Sources */,
 				45A549AA1AC944B300244D00 /* SKNode+Extensions.swift in Sources */,
 				45A549971AC9439F00244D00 /* CGFloat+Extensions.swift in Sources */,
 				45A549AD1AC944B300244D00 /* SKTTimingFunctions.swift in Sources */,

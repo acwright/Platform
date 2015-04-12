@@ -28,13 +28,16 @@ class Player: SKSpriteNode {
     var grounded: Bool = false
     var direction: Direction = Direction.None
     var jumping: Jumping = Jumping.Off
+    var jumpReset: Bool = true
     
-    let gravity: CGFloat = -7.8
-    let damping: CGFloat = 0.7
-    let jumpCutoff: CGFloat = 15.0
-    let acceleration = CGVectorMake(3.0, 55.0)
-    let accelerationMaxClamping = CGVectorMake(15.0, 55.0)
-    let accelerationMinClamping = CGVectorMake(-15.0, -15.0)
+    let gravity: CGFloat = -42.0
+    let jumpCutoff: CGFloat = 11.0
+    let accelerationGroundDamping: CGFloat = 0.95
+    let accelerationGround = CGVectorMake(18.0, 22.0)
+    let accelerationAir = CGVectorMake(12.0, 0.0)
+    let accelerationAirReverseAllowance: CGFloat = 2.0
+    let accelerationMaxClamping = CGVectorMake(36.0, 34.0)
+    let accelerationMinClamping = CGVectorMake(-36.0, -56.0)
     
     var jumpable: Bool = true
 
@@ -53,47 +56,57 @@ class Player: SKSpriteNode {
     func jump(cancel: Bool) {
         if cancel {
             self.jumping = Jumping.Off
-            self.jumpable = true
         } else {
-            if self.jumpable {
+            if self.grounded && self.jumpReset {
                 self.jumping = Jumping.On
+                self.grounded = false
+                self.jumpReset = false
+                
+                self.velocity += CGVectorMake(0.0, self.accelerationGround.dy)
             }
         }
     }
     
     func update(dt: NSTimeInterval) {
-        if self.direction == Direction.Left {
-            self.velocity += CGVectorMake(-self.acceleration.dx, 0.0)
-        } else if self.direction == Direction.Right {
-            self.velocity += CGVectorMake(self.acceleration.dx, 0.0)
+        self.velocity += CGVectorMake(0.0, self.gravity * CGFloat(dt))
+        
+        if self.grounded {
+            if self.direction == Direction.Left {
+                self.velocity += CGVectorMake(-self.accelerationGround.dx * CGFloat(dt), 0.0)
+            } else if self.direction == Direction.Right {
+                self.velocity += CGVectorMake(self.accelerationGround.dx * CGFloat(dt), 0.0)
+            } else {
+                if self.velocity.dx != 0.0 {
+                    self.velocity.dx = self.velocity.dx * self.accelerationGroundDamping * (1 - CGFloat(dt))
+                }
+            }
         } else {
-            self.velocity.dx = self.velocity.dx * self.damping
+            if self.direction == Direction.Left && self.velocity.dx >= -self.accelerationAirReverseAllowance {
+                self.velocity += CGVectorMake(-self.accelerationAir.dx * CGFloat(dt), 0.0)
+            } else if self.direction == Direction.Right && self.velocity.dx <= self.accelerationAirReverseAllowance {
+                self.velocity += CGVectorMake(self.accelerationAir.dx * CGFloat(dt), 0.0)
+            }
         }
         
         if self.jumping == Jumping.On {
-            if self.grounded && self.jumpable {
-                if self.velocity.dy < self.accelerationMaxClamping.dy {
-                    self.velocity += CGVectorMake(0.0, self.acceleration.dy)
-                }
-                self.jumpable = false
-                self.grounded = false
-            } else {
-                self.velocity += CGVectorMake(0.0, self.gravity)
-            }
-        } else {
-            self.velocity += CGVectorMake(0.0, self.gravity)
-            
+            self.jumpReset = false
+        } else if self.jumping == Jumping.Off {
             if self.velocity.dy > self.jumpCutoff {
-                self.velocity = CGVectorMake(self.velocity.dx, self.jumpCutoff)
+                self.velocity.dy = self.jumpCutoff
             }
-            self.grounded = true
+            
+            if self.grounded {
+                self.jumpReset = true
+            }
         }
         
+        if self.velocity.dy == 0 {
+            self.grounded = true
+        }
+   
         self.velocity.dx = self.velocity.dx.clamped(self.accelerationMinClamping.dx, self.accelerationMaxClamping.dx)
         self.velocity.dy = self.velocity.dy.clamped(self.accelerationMinClamping.dy, self.accelerationMaxClamping.dy)
-        
-        self.velocity += self.velocity * CGFloat(dt)
-        
+ 
         self.desiredPosition = self.position + self.velocity
     }
     
