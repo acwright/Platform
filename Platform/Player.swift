@@ -57,13 +57,7 @@ class Player: SKSpriteNode {
         if cancel {
             self.jumping = Jumping.Off
         } else {
-            if self.grounded && self.jumpReset {
-                self.jumping = Jumping.On
-                self.grounded = false
-                self.jumpReset = false
-                
-                self.velocity += CGVectorMake(0.0, self.accelerationGround.dy)
-            }
+            self.jumping = Jumping.On
         }
     }
     
@@ -89,19 +83,19 @@ class Player: SKSpriteNode {
         }
         
         if self.jumping == Jumping.On {
-            self.jumpReset = false
+            if self.grounded && self.jumpReset {
+                self.velocity += CGVectorMake(0.0, self.accelerationGround.dy)
+                self.grounded = false
+                self.jumpReset = false
+            }
         } else if self.jumping == Jumping.Off {
             if self.velocity.dy > self.jumpCutoff {
                 self.velocity.dy = self.jumpCutoff
             }
             
-            if self.grounded {
+            if self.grounded && self.jumpReset == false {
                 self.jumpReset = true
             }
-        }
-        
-        if self.velocity.dy == 0 {
-            self.grounded = true
         }
    
         self.velocity.dx = self.velocity.dx.clamped(self.accelerationMinClamping.dx, self.accelerationMaxClamping.dx)
