@@ -21,10 +21,10 @@ class Player: SKSpriteNode {
         case Off
     }
     
-    var _size = CGSizeMake(32, 32)
+    var _size = CGSize(width: 32, height: 32)
     
-    var velocity = CGVectorMake(0.0, 0.0)
-    var desiredPosition = CGPointZero
+    var velocity = CGVector.zero
+    var desiredPosition = CGPoint.zero
     var grounded: Bool = false
     var direction: Direction = Direction.None
     var jumping: Jumping = Jumping.Off
@@ -33,11 +33,11 @@ class Player: SKSpriteNode {
     let gravity: CGFloat = -42.0
     let jumpCutoff: CGFloat = 11.0
     let accelerationGroundDamping: CGFloat = 0.95
-    let accelerationGround = CGVectorMake(18.0, 22.0)
-    let accelerationAir = CGVectorMake(12.0, 0.0)
+    let accelerationGround = CGVector(dx: 18, dy: 22)
+    let accelerationAir = CGVector(dx: 12, dy: 0)
     let accelerationAirReverseAllowance: CGFloat = 2.0
-    let accelerationMaxClamping = CGVectorMake(36.0, 34.0)
-    let accelerationMinClamping = CGVectorMake(-36.0, -56.0)
+    let accelerationMaxClamping = CGVector(dx: 36, dy: 34)
+    let accelerationMinClamping = CGVector(dx: -36, dy: -56)
     
     var jumpable: Bool = true
 
@@ -61,14 +61,14 @@ class Player: SKSpriteNode {
         }
     }
     
-    func update(dt: NSTimeInterval) {
-        self.velocity += CGVectorMake(0.0, self.gravity * CGFloat(dt))
+    func update(dt: TimeInterval) {
+        self.velocity = CGVector(dx: 0.0, dy: self.gravity * CGFloat(dt))
         
         if self.grounded {
             if self.direction == Direction.Left {
-                self.velocity += CGVectorMake(-self.accelerationGround.dx * CGFloat(dt), 0.0)
+                self.velocity += CGVector(dx: -self.accelerationGround.dx * CGFloat(dt), dy: 0.0)
             } else if self.direction == Direction.Right {
-                self.velocity += CGVectorMake(self.accelerationGround.dx * CGFloat(dt), 0.0)
+                self.velocity += CGVector(dx: self.accelerationGround.dx * CGFloat(dt), dy: 0.0)
             } else {
                 if self.velocity.dx != 0.0 {
                     self.velocity.dx = self.velocity.dx * self.accelerationGroundDamping * (1 - CGFloat(dt))
@@ -76,15 +76,15 @@ class Player: SKSpriteNode {
             }
         } else {
             if self.direction == Direction.Left && self.velocity.dx >= -self.accelerationAirReverseAllowance {
-                self.velocity += CGVectorMake(-self.accelerationAir.dx * CGFloat(dt), 0.0)
+                self.velocity += CGVector(dx: -self.accelerationAir.dx * CGFloat(dt), dy: 0.0)
             } else if self.direction == Direction.Right && self.velocity.dx <= self.accelerationAirReverseAllowance {
-                self.velocity += CGVectorMake(self.accelerationAir.dx * CGFloat(dt), 0.0)
+                self.velocity += CGVector(dx: self.accelerationAir.dx * CGFloat(dt), dy: 0.0)
             }
         }
         
         if self.jumping == Jumping.On {
             if self.grounded && self.jumpReset {
-                self.velocity += CGVectorMake(0.0, self.accelerationGround.dy)
+                self.velocity += CGVector(dx: 0.0, dy: self.accelerationGround.dy)
                 self.grounded = false
                 self.jumpReset = false
             }
@@ -98,8 +98,8 @@ class Player: SKSpriteNode {
             }
         }
    
-        self.velocity.dx = self.velocity.dx.clamped(self.accelerationMinClamping.dx, self.accelerationMaxClamping.dx)
-        self.velocity.dy = self.velocity.dy.clamped(self.accelerationMinClamping.dy, self.accelerationMaxClamping.dy)
+        self.velocity.dx = self.velocity.dx.clamped(v1: self.accelerationMinClamping.dx, v2: self.accelerationMaxClamping.dx)
+        self.velocity.dy = self.velocity.dy.clamped(v1: self.accelerationMinClamping.dy, v2: self.accelerationMaxClamping.dy)
  
         self.desiredPosition = self.position + self.velocity
     }
@@ -107,7 +107,7 @@ class Player: SKSpriteNode {
     func collisionBoundingBox() -> CGRect {
         let x = self.desiredPosition.x - (self._size.width / 2)
         let y = self.desiredPosition.y - (self._size.height / 2)
-        let box = CGRectMake(x, y, self._size.width, self._size.height)
+        let box = CGRect(x: x, y: y, width: self._size.width, height: self._size.height)
         
         return box
     }

@@ -12,21 +12,21 @@ class Scene: SKScene {
     
     var world: SKNode!
     
-    var lastUpdateTime: NSTimeInterval!
-    var dt: NSTimeInterval!
+    var lastUpdateTime: TimeInterval!
+    var dt: TimeInterval!
 
     var player: Player!
     var walls: [Wall] = []
     
-    override func didMoveToView(view: SKView) {
+    override func didMove(to view: SKView) {
         self.world = SKNode()
         self.addChild(self.world)
         
-        self.anchorPoint = CGPointMake(0.5, 0.5)
-        self.world.position = CGPointMake(-256, -256)
+        self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        self.world.position = CGPoint(x: -256, y: -256)
         
-        self.player = Player(color: SKColor.greenColor(), size: CGSizeMake(32, 32))
-        self.player.position = CGPointMake(256, 256)
+        self.player = Player(color: SKColor.green, size: CGSize(width: 32, height: 32))
+        self.player.position = CGPoint(x: 256, y: 256)
         self.player.zPosition = 10
         
         let wall = Wall()
@@ -36,7 +36,7 @@ class Scene: SKScene {
         self.world.addChild(self.player)
     }
     
-    override func update(currentTime: NSTimeInterval) {
+    override func update(_ currentTime: TimeInterval) {
         if let lastUpdateTime = self.lastUpdateTime {
             self.dt = currentTime - lastUpdateTime
         } else {
@@ -44,18 +44,18 @@ class Scene: SKScene {
         }
         self.lastUpdateTime = currentTime
         
-        self.player.update(self.dt)
+        self.player.update(dt: self.dt)
         
         for wall in self.walls {
-            wall.resolveCollisions(self.player)
+            wall.resolveCollisions(player: self.player)
         }
         
         if self.player.position.y < 0 {
-            self.player.position = CGPointMake(256, 256)
+            self.player.position = CGPoint(x: 256, y: 256)
         }
     }
     
-    override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
         if let utf16View = theEvent.charactersIgnoringModifiers?.utf16 {
             switch Int(utf16View[utf16View.startIndex]) {
             case NSLeftArrowFunctionKey:
@@ -63,18 +63,18 @@ class Scene: SKScene {
             case NSRightArrowFunctionKey:
                 self.player.right()
             case NSUpArrowFunctionKey:
-                self.player.jump(false)
+                self.player.jump(cancel: false)
             default:
                 break
             }
             
             if theEvent.keyCode == 49 {
-                self.player.jump(false)
+                self.player.jump(cancel: false)
             }
         }
     }
     
-    override func keyUp(theEvent: NSEvent) {
+    override func keyUp(with theEvent: NSEvent) {
         if let utf16View = theEvent.charactersIgnoringModifiers?.utf16 {
             switch Int(utf16View[utf16View.startIndex]) {
             case NSLeftArrowFunctionKey:
@@ -82,13 +82,13 @@ class Scene: SKScene {
             case NSRightArrowFunctionKey:
                 self.player.stop()
             case NSUpArrowFunctionKey:
-                self.player.jump(true)
+                self.player.jump(cancel: true)
             default:
                 break
             }
             
             if theEvent.keyCode == 49 {
-                self.player.jump(true)
+                self.player.jump(cancel: true)
             }
         }
     }

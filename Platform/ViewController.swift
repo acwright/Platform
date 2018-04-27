@@ -20,7 +20,7 @@ class ViewController: NSViewController {
         self.gameView.showsNodeCount = true
         
         let scene = Scene(size: self.gameView.bounds.size)
-        scene.scaleMode = SKSceneScaleMode.AspectFill
+        scene.scaleMode = SKSceneScaleMode.aspectFill
         
         self.gameView.presentScene(scene)
     }

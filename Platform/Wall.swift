@@ -26,21 +26,21 @@ class Wall: SKNode {
     override init() {
         super.init()
         
-        let floor = SKSpriteNode(color: SKColor.redColor(), size: CGSizeMake(512, 32))
-        floor.anchorPoint = CGPointZero
-        floor.position = CGPointMake(0, 0)
-        
-        let platform = SKSpriteNode(color: SKColor.redColor(), size: CGSizeMake(64, 32))
-        platform.anchorPoint = CGPointZero
-        platform.position = CGPointMake(128, 96)
-        
-        let wall1 = SKSpriteNode(color: SKColor.redColor(), size: CGSizeMake(32, 256))
-        wall1.anchorPoint = CGPointZero
-        wall1.position = CGPointMake(0, 32)
-        
-        let wall2 = SKSpriteNode(color: SKColor.redColor(), size: CGSizeMake(32, 128))
-        wall2.anchorPoint = CGPointZero
-        wall2.position = CGPointMake(512 - 32, 32)
+        let floor = SKSpriteNode(color: SKColor.red, size: CGSize(width: 512, height: 32))
+        floor.anchorPoint = CGPoint.zero
+        floor.position = CGPoint(x: 0, y: 0)
+
+        let platform = SKSpriteNode(color: SKColor.red, size: CGSize(width: 64, height: 32))
+        platform.anchorPoint = CGPoint.zero
+        platform.position = CGPoint(x: 128, y: 96)
+
+        let wall1 = SKSpriteNode(color: SKColor.red, size: CGSize(width: 32, height: 256))
+        wall1.anchorPoint = CGPoint.zero
+        wall1.position = CGPoint(x: 0, y: 32)
+
+        let wall2 = SKSpriteNode(color: SKColor.red, size: CGSize(width: 32, height: 128))
+        wall2.anchorPoint = CGPoint.zero
+        wall2.position = CGPoint(x: 512 - 32, y: 32)
         
         self.addChild(floor)
         self.addChild(platform)
@@ -65,18 +65,18 @@ class Wall: SKNode {
             if collision.hasCollision {
                 switch collision.direction {
                 case .Top:
-                    player.desiredPosition = CGPointMake(player.desiredPosition.x, player.desiredPosition.y + collision.rect.size.height)
-                    player.velocity = CGVectorMake(player.velocity.dx, 0.0)
+                    player.desiredPosition = CGPoint(x: player.desiredPosition.x, y: player.desiredPosition.y + collision.rect.size.height)
+                    player.velocity = CGVector(dx: player.velocity.dx, dy: 0.0)
                     player.grounded = true
                 case .Bottom:
-                    player.desiredPosition = CGPointMake(player.desiredPosition.x, player.desiredPosition.y - collision.rect.size.height)
-                    player.velocity = CGVectorMake(player.velocity.dx, 0.0)
+                    player.desiredPosition = CGPoint(x: player.desiredPosition.x, y: player.desiredPosition.y - collision.rect.size.height)
+                    player.velocity = CGVector(dx: player.velocity.dx, dy: 0.0)
                 case .Left:
-                    player.desiredPosition = CGPointMake(player.desiredPosition.x + collision.rect.size.width, player.desiredPosition.y)
-                    player.velocity = CGVectorMake(0.0, player.velocity.dy)
+                    player.desiredPosition = CGPoint(x: player.desiredPosition.x + collision.rect.size.width, y: player.desiredPosition.y)
+                    player.velocity = CGVector(dx: 0.0, dy: player.velocity.dy)
                 case .Right:
-                    player.desiredPosition = CGPointMake(player.desiredPosition.x - collision.rect.size.width, player.desiredPosition.y)
-                    player.velocity = CGVectorMake(0.0, player.velocity.dy)
+                    player.desiredPosition = CGPoint(x: player.desiredPosition.x - collision.rect.size.width, y: player.desiredPosition.y)
+                    player.velocity = CGVector(dx: 0.0, dy: player.velocity.dy)
                 default:
                     break
                 }
@@ -85,15 +85,15 @@ class Wall: SKNode {
         }
     }
     
-    func testRectangleCollision(#A: CGRect, B: CGRect) -> Collision {
-        var rect = CGRectNull
+    func testRectangleCollision(A: CGRect, B: CGRect) -> Collision {
+        var rect = CGRect.null
         var direction = Collision.Direction.None
         
-        if !CGRectEqualToRect(A, B) && (!CGRectIsNull(A) && !CGRectIsNull(B)) {
+        if !A.equalTo(B) && (!A.isNull && !B.isNull) {
             
-            rect = CGRectIntersection(A, B)
+            rect = A.intersection(B)
             
-            if !CGRectIsNull(rect) {
+            if !rect.isNull {
                 if rect.height >= rect.width
                 {
                     direction = (A.origin.x <= B.origin.x) ? .Left : .Right
